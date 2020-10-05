@@ -41,6 +41,21 @@ INSTALLED_APPS = [
     'api'
 ]
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+         'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+          'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    #     'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # )
+    
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,13 +93,19 @@ WSGI_APPLICATION = 'backend_netfarm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dafqid_netfarm',
+        'USER': 'dafqid_netfarm',
+        'PASSWORD': 'KoalaPanda123',
+        'HOST': 'cerberus.jagoanhosting.com',
+        'PORT': '3306',
         'OPTIONS': {
-            'read_default_file': 'my.cnf',
+            # 'read_default_file': 'my.cnf',
             'init_command': 'SET default_storage_engine=INNODB',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         },
-        # 'NAME': 'netfarm',                  
-        # 'USER': 'Anvarisy',             
-        # 'PASSWORD': 'koalapanda',                  
+        # 'NAME': 'dafqid_netfarm',                  
+        # 'USER': 'dafqid_netfarm',             
+        # 'PASSWORD': 'KoalaPanda123',                  
         # 'HOST': 'localhost',                     
         # 'PORT': '3306',   
     }

@@ -4,12 +4,12 @@ from rest_framework import serializers
 class TenantSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = tenant
-        fields = ('tenant_id','tenant_name','tenant_address','tenant_owner')
+        fields = ('id','tenant_name','tenant_address','tenant_owner')
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = category
-        fields = ('category_id','category_name','show_homepage')
+        fields = ('id','category_name','show_homepage')
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
