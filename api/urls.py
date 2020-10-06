@@ -9,7 +9,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     # path('', include(router.urls)),
     # path('auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('category',ApiAllCategory.as_view()),
-    path('tenant', ApiAllTenant.as_view()),
-    path('product',ApiAllProduct.as_view())
+    path('category/',ApiAllCategory.as_view()),
+    path('tenant/', ApiAllTenant.as_view()),
+    path('product/',ApiAllProduct.as_view())
 ]

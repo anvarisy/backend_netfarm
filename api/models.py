@@ -5,6 +5,7 @@ class category(models.Model):
     # category_id = models.CharField(max_length=6, primary_key=True)
     category_name = models.CharField(max_length=120)
     show_homepage = models.BooleanField()
+    category_image = models.ImageField(upload_to='category')
     def __str__(self):
         return self.category_name
 
@@ -13,6 +14,7 @@ class tenant(models.Model):
     tenant_name = models.CharField(max_length=70)
     tenant_address = models.TextField()
     tenant_owner = models.CharField(max_length=100)
+    tenant_image = models.ImageField(upload_to='tenant')
     def __str__(self):
         return self.tenant_name
 
