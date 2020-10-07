@@ -1,4 +1,4 @@
-from .models import tenant, product, category
+from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
 
 class TenantSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,3 +15,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = product
         fields = ('id','product_name','product_price','product_image','tenant_id','category_id')
+
+class HalalSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = product_check_halal
+        fields = ('id','product_id','halal','no_halal','date_accepted','date_expired')

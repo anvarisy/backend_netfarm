@@ -24,3 +24,20 @@ class product(models.Model):
     product_name = models.CharField(max_length=70)
     product_price = models.IntegerField()
     product_image = models.ImageField(upload_to='product')
+    is_bpom = models.BooleanField(default=False)
+    is_sibaweh = models.BooleanField(default=False)
+    def __str__(self):
+        return self.product_name
+    
+class product_check_halal(models.Model):
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    halal_choice = (
+        (None,'-'),
+        ('bpom','BPOM'),
+        ('sibaweh','SIBAWEH'),
+    )
+    halal = models.CharField(choices=halal_choice, default=None, blank=True, max_length=10)
+    no_halal = models.CharField(max_length=128)
+    date_accepted = models.DateField(default=None, blank= True)
+    date_expired = models.DateField(default=None, blank=True)
+    

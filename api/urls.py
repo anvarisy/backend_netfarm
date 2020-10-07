@@ -1,5 +1,5 @@
 from rest_framework import routers
-from api.views import ApiAllCategory, ApiAllTenant, ApiAllProduct
+from api.views import ApiAllCategory, ApiAllTenant, ApiAllProduct, ApiCheckHalal
 from django.urls import include, path
 
 router = routers.DefaultRouter()
@@ -11,5 +11,6 @@ urlpatterns = [
     # path('auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('category/',ApiAllCategory.as_view()),
     path('tenant/', ApiAllTenant.as_view()),
-    path('product/',ApiAllProduct.as_view())
+    path('product/',ApiAllProduct.as_view()),
+    path('check-halal/', ApiCheckHalal.as_view()),
 ]
