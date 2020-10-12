@@ -41,3 +41,33 @@ class product_check_halal(models.Model):
     date_accepted = models.DateField(default=None, blank= True)
     date_expired = models.DateField(default=None, blank=True)
     
+class user_client(models.Model):
+    email = models.CharField(max_length=100, primary_key=True)
+    full_name = models.CharField(max_length=35)
+    address = models.TextField()
+    kecamatan = models.CharField(max_length=50)
+    kabupaten = models.CharField(max_length=50)
+    post_code = models.IntegerField()
+    phone = models.CharField(max_length=14)
+    password = models.CharField(max_length=140)
+    is_login = models.BooleanField(default=False)
+    def __str__(self):
+        return self.email
+
+class order(models.Model):
+    order_id = models.CharField(max_length=14, primary_key=True)
+    tenant = models.ForeignKey(tenant, on_delete=models.CASCADE)
+    user = models.ForeignKey(user_client, on_delete=models.CASCADE)
+    total = models.BigIntegerField()
+    date_update = models.DateField()
+    status = models.CharField(max_length=30)
+    
+class order_detail(models.Model):
+    order = models.ForeignKey(order, related_name='details', on_delete=models.CASCADE)
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    count_product = models.IntegerField()
+    total = models.BigIntegerField()
+    date_update = models.DateField()
+
+    
+    

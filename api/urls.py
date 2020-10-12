@@ -1,6 +1,7 @@
 from rest_framework import routers
-from api.views import ApiAllCategory, ApiAllTenant, ApiAllProduct, ApiCheckHalal
+from api.views import ApiAllCategory, ApiAllProduct, ApiAllTenant, ApiCart, ApiCheckHalal
 from django.urls import include, path
+
 
 router = routers.DefaultRouter()
 # router.register('category', ApiAllCategory)
@@ -13,4 +14,5 @@ urlpatterns = [
     path('tenant/', ApiAllTenant.as_view()),
     path('product/',ApiAllProduct.as_view()),
     path('check-halal/', ApiCheckHalal.as_view()),
+    path('cart/', ApiCart.as_view()),
 ]

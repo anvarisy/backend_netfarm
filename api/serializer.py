@@ -1,7 +1,8 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
+from api.models import order, order_detail, user_client
 
-class TenantSerializer(serializers.HyperlinkedModelSerializer):
+class TenantSerializer(serializers.ModelSerializer):
     class Meta:
         model = tenant
         fields = ('id','tenant_name','tenant_address','tenant_image','tenant_owner')
@@ -20,3 +21,23 @@ class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = product_check_halal
         fields = ('id','product_id','halal','no_halal','date_accepted','date_expired')
+        
+class UclientSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = user_client
+        fields = ('email','full_name','address','kecamatan','kabupaten','post_code'
+                  'phone','password','is_login')
+
+class OrderDetail(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.product_name')
+    class Meta:
+        model = order_detail
+        fields = ('product_id','product_name','count_product','total','date_update')
+        
+class CartSerializer(serializers.ModelSerializer):
+    details = OrderDetail(read_only=True, many=True)
+    tenant_name = serializers.CharField(source='tenant.tenant_name')
+    class Meta:
+        model = order
+        fields = ('order_id','user_id','tenant_id','tenant_name','total','date_update','status','details')
+        

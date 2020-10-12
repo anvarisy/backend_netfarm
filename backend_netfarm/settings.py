@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'e#unuau57y2zkypefcne(bshk-93bw0^2rke89(=j$l&w2n3vp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1','rest-netfarm.daf-q.id']
 
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api'
+    'api',
 ]
 
 REST_FRAMEWORK = {
@@ -55,6 +55,7 @@ REST_FRAMEWORK = {
     # )
     
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -152,9 +153,9 @@ STATIC_URL = '/root/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),)
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'root')
-STATIC_ROOT = '/home/dafqid/backend_netfarm/root'
+STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+# STATIC_ROOT = '/home/dafqid/backend_netfarm/root'
 
 MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_ROOT = '/home/dafqid/backend_netfarm/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = '/home/dafqid/backend_netfarm/media'
