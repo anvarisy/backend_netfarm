@@ -30,14 +30,44 @@ class UclientSerializer(serializers.HyperlinkedModelSerializer):
 
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')
+    product_image = serializers.CharField(source='product.product_image')
     class Meta:
         model = order_detail
-        fields = ('product_id','product_name','count_product','total','date_update')
+        fields = ('product_id','product_name','product_image','count_product','total','date_update')
         
 class CartSerializer(serializers.ModelSerializer):
-    details = OrderDetail(read_only=True, many=True)
+    details = OrderDetail(many=True)
     tenant_name = serializers.CharField(source='tenant.tenant_name')
     class Meta:
         model = order
         fields = ('order_id','user_id','tenant_id','tenant_name','total','date_update','status','details')
-        
+    
+    def create(self, validated_data):
+        detail_order = validated_data.pop('details')
+        o = order.objects.create(**validated_data)
+        for item in detail_order:
+            order_detail.objects.create(order=o, **item)
+        return o
+
+class PostOrderDetail(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = order_detail
+        fields = ('product_id','count_product','total','date_update')
+    
+class PostCartSerializer(serializers.HyperlinkedModelSerializer):
+    details = PostOrderDetail(many=True)
+    data =None
+    class Meta:
+        model = order
+        fields = ('order_id','user_id','tenant_id','total','date_update','status','details')
+    
+    def FillData(self, datas):
+        self.data = datas
+        return self.data
+    
+    def create(self, validated_data):
+        detail_order = self.data.pop('details')
+        o = order.objects.create(**self.data)
+        for item in detail_order:
+            order_detail.objects.create(order_id=self.data['order_id'],**item)
+        return o
