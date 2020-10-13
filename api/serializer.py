@@ -25,8 +25,8 @@ class HalalSerializer(serializers.HyperlinkedModelSerializer):
 class UclientSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = user_client
-        fields = ('email','full_name','address','kecamatan','kabupaten','post_code'
-                  'phone','password','is_login')
+        fields = ('email','full_name','address','kecamatan','kabupaten','post_code',
+                  'phone','password')
 
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')

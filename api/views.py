@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
-from api.serializer import CartSerializer, PostCartSerializer
+from api.serializer import CartSerializer, PostCartSerializer, UclientSerializer
 from api.models import order
 from rest_framework.response import Response
 from rest_framework import status
@@ -62,6 +62,13 @@ class ApiCart(generics.ListAPIView):
             queryset = queryset.filter(order_id=oid)
         return queryset
 
+class ApiRegister(APIView):
+    def post (self, request):
+        serializer = UclientSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostApiCart(APIView):
     serializer_class = CartSerializer
