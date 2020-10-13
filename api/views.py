@@ -7,7 +7,7 @@ from api.models import order
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-
+import json
 # Create your views here.
 class ApiAllCategory(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
@@ -66,9 +66,11 @@ class ApiCart(generics.ListAPIView):
 class PostApiCart(APIView):
     serializer_class = CartSerializer
     def post(self, request):
+        body_unicode = request.data
+        body = json.dumps(body_unicode)
         serializer = PostCartSerializer(data=request.data)
         serializer.FillData(datas=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(body)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

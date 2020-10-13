@@ -57,12 +57,14 @@ class PostOrderDetail(serializers.HyperlinkedModelSerializer):
 class PostCartSerializer(serializers.HyperlinkedModelSerializer):
     details = PostOrderDetail(many=True)
     data =None
+    data_ = None
     class Meta:
         model = order
         fields = ('order_id','user_id','tenant_id','total','date_update','status','details')
     
     def FillData(self, datas):
         self.data = datas
+        self.data_ = datas
         return self.data
     
     def create(self, validated_data):
@@ -70,4 +72,4 @@ class PostCartSerializer(serializers.HyperlinkedModelSerializer):
         o = order.objects.create(**self.data)
         for item in detail_order:
             order_detail.objects.create(order_id=self.data['order_id'],**item)
-        return o
+        return (o,detail_order)
