@@ -2,8 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
-from api.serializer import CartSerializer, PostCartSerializer, UclientSerializer
-from api.models import order
+from api.serializer import CartSerializer, PostCartSerializer, UclientSerializer,\
+    PromoSerializer
+from api.models import order, promo
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -81,3 +82,10 @@ class PostApiCart(APIView):
             serializer.save()
             return Response(body)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ApiPromo(generics.ListAPIView):
+    # renderer_classes = [renderers.JSONRenderer]
+    serializer_class = PromoSerializer
+    def get_queryset(self):
+        queryset = promo.objects.all()
+        return queryset

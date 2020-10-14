@@ -1,6 +1,6 @@
 from django.contrib import admin
 # from django import forms
-from api.models import category, order, order_detail, product, product_check_halal, tenant, user
+from api.models import category, order, order_detail, product, product_check_halal, promo, tenant, user
 # from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 # from django.contrib.auth.forms import ReadOnlyPasswordHashField
 # from django.core.exceptions import ValidationError
@@ -76,4 +76,4 @@ from api.models import category, order, order_detail, product, product_check_hal
 #     search_fields = ('email',)
 #     ordering = ('email',)
 #     filter_horizontal = ()
-admin.site.register([category,product,tenant,product_check_halal,user,order,order_detail])
+admin.site.register([category,product,tenant,product_check_halal,user,order,order_detail,promo])

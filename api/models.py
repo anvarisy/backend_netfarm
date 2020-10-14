@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models  import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
+from unittest.util import _MAX_LENGTH
+from pyasn1.compat.octets import null
 
 # Create your models here.
 class category(models.Model):
@@ -133,5 +135,13 @@ class order_detail(models.Model):
     total = models.BigIntegerField()
     date_update = models.DateField()
 
+class promo(models.Model):
+    date_start = models.DateField()
+    date_end = models.DateField()
+    tenant = models.ForeignKey(tenant, on_delete=models.CASCADE, blank= True, null=True)
+    name = models.TextField()
+    image = models.ImageField(upload_to='promo')
+    url = models.CharField(max_length=160)
+    position = models.IntegerField()
     
     

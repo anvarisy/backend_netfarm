@@ -1,6 +1,6 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
-from api.models import order, order_detail, user
+from api.models import order, order_detail, promo, user
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
@@ -62,7 +62,7 @@ class PostOrderDetail(serializers.HyperlinkedModelSerializer):
         model = order_detail
         fields = ('product_id','count_product','total','date_update')
     
-class PostCartSerializer(serializers.HyperlinkedModelSerializer):
+class PostCartSerializer(serializers.HyperlinkedModelSerializer):  
     details = PostOrderDetail(many=True)
     data =None
     data_ = None
@@ -81,3 +81,8 @@ class PostCartSerializer(serializers.HyperlinkedModelSerializer):
         for item in detail_order:
             order_detail.objects.create(order_id=self.data['order_id'],**item)
         return (o,detail_order)
+    
+class PromoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = promo
+        fields = ('date_start','date_end','tenant_id','name','image','url','position')
