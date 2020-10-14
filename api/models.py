@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models  import BaseUserManager, AbstractBaseUser
+from django.utils import timezone
 
 # Create your models here.
 class category(models.Model):
@@ -41,23 +43,85 @@ class product_check_halal(models.Model):
     date_accepted = models.DateField(default=None, blank= True)
     date_expired = models.DateField(default=None, blank=True)
     
-class user_client(models.Model):
+class UserManager(BaseUserManager):
+    def create_user(self,email,full_name, password=None):
+        if not email:
+            raise ValueError('Users must have an email address')
+        user = self.model(
+            email=self.normalize_email(email),
+            full_name=full_name,
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    
+    def create_superuser(self, email, full_name, password=None):
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
+        user = self.create_user(
+            email,
+            password=password,
+            full_name=full_name,
+        )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+    
+class user(AbstractBaseUser):
     email = models.CharField(max_length=100, primary_key=True)
-    full_name = models.CharField(max_length=35)
-    address = models.TextField()
+    full_name = models.CharField(max_length=35,blank=True)
+    address = models.TextField(blank=True)
     kecamatan = models.CharField(max_length=50)
     kabupaten = models.CharField(max_length=50)
-    post_code = models.IntegerField()
-    phone = models.CharField(max_length=14)
-    password = models.CharField(max_length=140)
+    post_code = models.CharField(max_length=5,blank=True)
+    phone = models.CharField(max_length=14,blank=True)
+    is_client = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     is_login = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    objects = UserManager()
+    date_joined = models.DateTimeField(default=timezone.now)
+    
+    # EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['full_name']
+    
     def __str__(self):
         return self.email
+    # class Meta:
+    #     verbose_name = _('user')
+    #     verbose_name_plural = _('users')
+    #     db_table = 'users'
+        
+    # def clean(self):
+    #     super().clean()
+    #     self.email = self.__class__.objects.normalize_email(self.email)
+
+
+    # def email_user(self, subject, message, from_email=None, **kwargs):
+    #     send_mail(subject, message, from_email, [self.email], **kwargs)
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
 
 class order(models.Model):
     order_id = models.CharField(max_length=14, primary_key=True)
     tenant = models.ForeignKey(tenant, on_delete=models.CASCADE)
-    user = models.ForeignKey(user_client, on_delete=models.CASCADE)
+    user = models.ForeignKey(user, on_delete=models.CASCADE)
     total = models.BigIntegerField()
     date_update = models.DateField()
     status = models.CharField(max_length=30)

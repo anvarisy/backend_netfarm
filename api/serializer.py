@@ -1,7 +1,8 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
-from api.models import order, order_detail, user_client
-
+from api.models import order, order_detail, user
+from django.contrib.auth import get_user_model
+UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
     class Meta:
         model = tenant
@@ -24,9 +25,16 @@ class HalalSerializer(serializers.HyperlinkedModelSerializer):
         
 class UclientSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = user_client
+        model = user
         fields = ('email','full_name','address','kecamatan','kabupaten','post_code',
                   'phone','password')
+    
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = UserModel.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')
