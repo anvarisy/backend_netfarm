@@ -34,6 +34,12 @@ class UclientSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('email','full_name','address','kecamatan','kabupaten','post_code',
                   'phone','password','referral','level')
 
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user
+        fields = ('email','full_name','phone','referral','level')
+
+
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')
     product_image = serializers.CharField(source='product.product_image')
