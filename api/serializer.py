@@ -37,7 +37,7 @@ class UclientSerializer(serializers.HyperlinkedModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
-        fields = ('email','full_name','phone','referral','level')
+        fields = ('email','full_name','phone','referal_id','level')
 
 
 class OrderDetail(serializers.ModelSerializer):

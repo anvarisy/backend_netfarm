@@ -117,6 +117,15 @@ class ApiLogin(APIView):
         'token': token.key
     }, status=status.HTTP_200_OK)
 
+class ApiReferral(generics.ListAPIView):
+    serializer_class = ClientSerializer
+    def get_queryset(self):
+        email = self.kwargs['email']
+        queryset = user.objects.all()
+        queryset = queryset.filter(email=email)
+        return queryset
+        
+
 class PostApiCart(APIView):
     serializer_class = CartSerializer
     def post(self, request):
