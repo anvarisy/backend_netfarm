@@ -4,11 +4,12 @@ from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
 from api.serializer import CartSerializer, PostCartSerializer, UclientSerializer,\
     PromoSerializer
-from api.models import order, promo
+from api.models import order, promo, user
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 import json
+from rest_framework.exceptions import ValidationError
 # Create your views here.
 class ApiAllCategory(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
@@ -65,11 +66,31 @@ class ApiCart(generics.ListAPIView):
 
 class ApiRegister(APIView):
     def post (self, request):
+        # print(request.data)
         serializer = UclientSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid()
+        u = user.objects.create(
+            email = request.data['email'],
+            full_name = request.data['full_name'],
+            address = request.data['address'], 
+            kecamatan = request.data['kecamatan'],
+            kabupaten = request.data['kabupaten'],
+            post_code = request.data['post_code'],
+            phone = request.data['phone'],
+            level = request.data['level']
+            
+        )
+        u.set_password(request.data['password'])
+        u.referal_id = request.data['referral']
+        u.save()
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        a = serializer.data
+        a.pop('password')
+        print(a)
+        return Response(a,status=status.HTTP_201_CREATED)
 
 class PostApiCart(APIView):
     serializer_class = CartSerializer

@@ -22,19 +22,17 @@ class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = product_check_halal
         fields = ('id','product_id','halal','no_halal','date_accepted','date_expired')
+ 
+class RecursiveReferral(serializers.ModelSerializer):
+    class Meta:
+        model = user
         
 class UclientSerializer(serializers.HyperlinkedModelSerializer):
+    referral = RecursiveReferral()
     class Meta:
         model = user
         fields = ('email','full_name','address','kecamatan','kabupaten','post_code',
-                  'phone','password')
-    
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = UserModel.objects.create(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
+                  'phone','password','referral','level')
 
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')

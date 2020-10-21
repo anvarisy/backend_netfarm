@@ -75,8 +75,8 @@ class user(AbstractBaseUser):
     email = models.CharField(max_length=100, primary_key=True)
     full_name = models.CharField(max_length=35,blank=True)
     address = models.TextField(blank=True)
-    kecamatan = models.CharField(max_length=50)
-    kabupaten = models.CharField(max_length=50)
+    kecamatan = models.CharField(max_length=50,blank=True)
+    kabupaten = models.CharField(max_length=50,blank=True)
     post_code = models.CharField(max_length=5,blank=True)
     phone = models.CharField(max_length=14,blank=True)
     is_client = models.BooleanField(default=False)
@@ -84,7 +84,9 @@ class user(AbstractBaseUser):
     is_login = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     objects = UserManager()
-    date_joined = models.DateTimeField(default=timezone.now)
+    date_joined = models.DateField(default=timezone.now)
+    referal = models.ForeignKey('self',null=True, blank=True, related_name='referral',on_delete=models.CASCADE)
+    level = models.IntegerField()
     
     # EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
@@ -143,5 +145,4 @@ class promo(models.Model):
     image = models.ImageField(upload_to='promo')
     url = models.CharField(max_length=160)
     position = models.IntegerField()
-    
     
