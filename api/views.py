@@ -13,6 +13,9 @@ from django.contrib.auth import authenticate
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
 from .authentication import token_expire_handler, expires_in
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from api.authentication import ExpiringTokenAuthentication
 # Create your views here.
 class ApiAllCategory(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
@@ -59,12 +62,16 @@ class ApiCheckHalal(generics.ListAPIView):
 
 
 class ApiCart(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = CartSerializer
     def get_queryset(self):
         queryset = order.objects.all()
         oid = self.request.query_params.get('oid', None)
         if oid is not None:
             queryset = queryset.filter(order_id=oid)
+        else:
+            queryset = []
         return queryset
 
 class ApiRegister(APIView):
@@ -127,6 +134,8 @@ class ApiReferral(generics.ListAPIView):
         
 
 class PostApiCart(APIView):
+    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = CartSerializer
     def post(self, request):
         body_unicode = request.data
