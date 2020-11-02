@@ -170,8 +170,11 @@ class ApiFavourite(generics.ListAPIView):
 # class ApiFavourite(APIView):
     serializer_class = FavouriteSerializer
     def get_queryset(self):
-        # queryset = order_detail.objects.all()
-        queryset = order_detail.objects.values('product_id').annotate(t=Count('product_id')).order_by('t')
+        is_desc = self.request.query_params.get('desc', None)
+        if is_desc is not None:
+            queryset = order_detail.objects.values('product_id').annotate(t=Count('product_id')).order_by('-t')
+        else:
+            queryset = order_detail.objects.values('product_id').annotate(t=Count('product_id')).order_by('t')
         return queryset
     # def get(self, request):
     #     data = order_detail.objects.all().values('product_id').annotate(t=Count('product_id')).order_by('t')
