@@ -34,8 +34,9 @@ class ApiAllCategory(generics.ListAPIView):
 class ApiAllProduct(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['$product_name']
+    ordering_fields = ['product_price','product_date']
     def get_queryset(self):
         queryset = product.objects.all()
         # self.serializer_class(queryset)

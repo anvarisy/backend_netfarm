@@ -29,6 +29,7 @@ class product(models.Model):
     product_name = models.CharField(max_length=160)
     product_price = models.IntegerField()
     product_image = models.ImageField(upload_to='product')
+    product_date = models.DateField(default=timezone.now)
     is_bpom = models.BooleanField(default=False)
     is_sibaweh = models.BooleanField(default=False)
     product_description = models.TextField(blank=True, null=True)
