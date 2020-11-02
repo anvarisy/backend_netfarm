@@ -8,17 +8,17 @@ class TenantSerializer(serializers.ModelSerializer):
         model = tenant
         fields = ('id','tenant_name','tenant_address','tenant_image','tenant_owner')
 
-class ProductCategorySerializer(serializers.ModelSerializer):
-    # category_name = serializers.CharField(source='category.category_name')
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = product_category
-        fields = ('category_id',)
+        model = category
+        fields = ('id','category_name','category_image','show_homepage')
 
-class CategoryProductSerializers(serializers.ModelSerializer):
-    product_name = serializers.CharField(source='product.product_name')
+class ProductCategorySerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.category_name')
     class Meta:
         model = product_category
-        fields = ('product_id','category_id','product_name')
+        fields = ('category_id','category_name')
+
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,18 +27,17 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     tenant_name = serializers.CharField(source='tenant.tenant_name')
-    category_collections = CategoryProductSerializers(many=True)
+    # categories = ProductCategorySerializer(many=True, read_only=True)
+    categories = serializers.SerializerMethodField()
     image_collections = ProductImageSerializer(many=True)
     class Meta:
         model = product
         fields = ('id','product_name','product_price','product_image','tenant_id',
-        'tenant_name','image_collections','category_collections')
-
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = category
-        fields = ('id','category_name','category_image','show_homepage')
-
+        'tenant_name','image_collections','categories')
+    def get_categories(self, product_instance):
+        query_datas = product_category.objects.filter(product=product_instance)
+        return [ProductCategorySerializer(category).data for category in query_datas]
+        
 
 
 class HalalSerializer(serializers.HyperlinkedModelSerializer):

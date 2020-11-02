@@ -25,6 +25,7 @@ class tenant(models.Model):
 
 class product(models.Model):
     tenant = models.ForeignKey(tenant, on_delete=models.CASCADE)
+    categories = models.ManyToManyField(category, through='product_category')
     product_name = models.CharField(max_length=160)
     product_price = models.IntegerField()
     product_image = models.ImageField(upload_to='product')
@@ -35,8 +36,11 @@ class product(models.Model):
         return self.product_name
 
 class product_category(models.Model):
-    product = models.ForeignKey(product, on_delete=models.CASCADE, related_name='product_collections')
-    category = models.ForeignKey(category, on_delete=models.CASCADE, related_name='category_collections')
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    category = models.ForeignKey(category, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.product.product_name + " - " + self.category.category_name
+
 
 class product_images(models.Model):
     product = models.ForeignKey(product, on_delete=models.CASCADE,related_name='image_collections')
