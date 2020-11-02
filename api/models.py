@@ -22,17 +22,26 @@ class tenant(models.Model):
     def __str__(self):
         return self.tenant_name
 
+
 class product(models.Model):
     tenant = models.ForeignKey(tenant, on_delete=models.CASCADE)
-    category = models.ForeignKey(category, on_delete=models.CASCADE)
-    product_name = models.CharField(max_length=70)
+    product_name = models.CharField(max_length=160)
     product_price = models.IntegerField()
     product_image = models.ImageField(upload_to='product')
     is_bpom = models.BooleanField(default=False)
     is_sibaweh = models.BooleanField(default=False)
+    product_description = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.product_name
-    
+
+class product_category(models.Model):
+    product = models.ForeignKey(product, on_delete=models.CASCADE, related_name='product_collections')
+    category = models.ForeignKey(category, on_delete=models.CASCADE, related_name='category_collections')
+
+class product_images(models.Model):
+    product = models.ForeignKey(product, on_delete=models.CASCADE,related_name='image_collections')
+    product_img = models.ImageField(upload_to='product')
+
 class product_check_halal(models.Model):
     product = models.ForeignKey(product, on_delete=models.CASCADE)
     halal_choice = (

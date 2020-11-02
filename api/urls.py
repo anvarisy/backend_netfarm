@@ -20,5 +20,6 @@ urlpatterns = [
     path('promo/',ApiPromo.as_view()),
     path('login/',ApiLogin.as_view()),
     path('referral/<str:email>',ApiReferral.as_view()),
+   
     
 ]

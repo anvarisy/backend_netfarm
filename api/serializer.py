@@ -1,6 +1,6 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
-from api.models import order, order_detail, promo, user
+from api.models import order, order_detail, product_category, product_images, promo, user
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
@@ -8,15 +8,38 @@ class TenantSerializer(serializers.ModelSerializer):
         model = tenant
         fields = ('id','tenant_name','tenant_address','tenant_image','tenant_owner')
 
+class ProductCategorySerializer(serializers.ModelSerializer):
+    # category_name = serializers.CharField(source='category.category_name')
+    class Meta:
+        model = product_category
+        fields = ('category_id',)
+
+class CategoryProductSerializers(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.product_name')
+    class Meta:
+        model = product_category
+        fields = ('product_id','category_id','product_name')
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = product_images
+        fields = ('product_img',)
+
+class ProductSerializer(serializers.ModelSerializer):
+    tenant_name = serializers.CharField(source='tenant.tenant_name')
+    category_collections = CategoryProductSerializers(many=True)
+    image_collections = ProductImageSerializer(many=True)
+    class Meta:
+        model = product
+        fields = ('id','product_name','product_price','product_image','tenant_id',
+        'tenant_name','image_collections','category_collections')
+
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = category
         fields = ('id','category_name','category_image','show_homepage')
 
-class ProductSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = product
-        fields = ('id','product_name','product_price','product_image','tenant_id','category_id')
+
 
 class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -38,7 +61,6 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = user
         fields = ('email','full_name','phone','referal_id','level')
-
 
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')
@@ -90,3 +112,4 @@ class PromoSerializer(serializers.ModelSerializer):
     class Meta:
         model = promo
         fields = ('date_start','date_end','tenant_id','name','image','url','position')
+
