@@ -16,6 +16,9 @@ from .authentication import token_expire_handler, expires_in
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from api.authentication import ExpiringTokenAuthentication
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
 # Create your views here.
 class ApiAllCategory(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
@@ -31,6 +34,8 @@ class ApiAllCategory(generics.ListAPIView):
 class ApiAllProduct(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
     serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['$product_name']
     def get_queryset(self):
         queryset = product.objects.all()
         # self.serializer_class(queryset)
