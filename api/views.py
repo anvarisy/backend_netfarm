@@ -2,8 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
-from api.serializer import CartSerializer, ClientSerializer, PostCartSerializer, PromoSerializer, UclientSerializer
-from api.models import order, promo, user
+from api.serializer import CartSerializer, ClientSerializer, PostCartSerializer, PromoSerializer, UclientSerializer,\
+    FavouriteSerializer
+from api.models import order, promo, user, order_detail
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -18,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from api.authentication import ExpiringTokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from django.db.models import Count
 
 # Create your views here.
 class ApiAllCategory(generics.ListAPIView):
@@ -163,3 +165,14 @@ class ApiPromo(generics.ListAPIView):
     def get_queryset(self):
         queryset = promo.objects.all()
         return queryset
+
+class ApiFavourite(generics.ListAPIView):
+# class ApiFavourite(APIView):
+    serializer_class = FavouriteSerializer
+    def get_queryset(self):
+        # queryset = order_detail.objects.all()
+        queryset = order_detail.objects.values('product_id').annotate(t=Count('product_id')).order_by('t')
+        return queryset
+    # def get(self, request):
+    #     data = order_detail.objects.all().values('product_id').annotate(t=Count('product_id')).order_by('t')
+    #     return Response(data)

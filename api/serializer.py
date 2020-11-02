@@ -38,7 +38,15 @@ class ProductSerializer(serializers.ModelSerializer):
         query_datas = product_category.objects.filter(product=product_instance)
         return [ProductCategorySerializer(category).data for category in query_datas]
         
-
+class FavouriteSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+    class Meta:
+        model = order_detail
+        fields = ('product_id','product')
+    def get_product(self, product_instance):
+        query = product.objects.filter(id=product_instance['product_id'])
+        return[ProductSerializer(product).data for product in query]
+        
 
 class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

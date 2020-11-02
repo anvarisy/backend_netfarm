@@ -1,5 +1,6 @@
 from rest_framework import routers
-from api.views import ApiAllCategory, ApiAllProduct, ApiAllTenant, ApiCart, ApiCheckHalal, ApiLogin, ApiPromo, ApiReferral, ApiRegister, PostApiCart
+from api.views import ApiAllCategory, ApiAllProduct, ApiAllTenant, ApiCart, ApiCheckHalal, ApiLogin, ApiPromo, ApiReferral, ApiRegister, PostApiCart,\
+    ApiFavourite
 from django.urls import include, path
 
 
@@ -20,6 +21,5 @@ urlpatterns = [
     path('promo/',ApiPromo.as_view()),
     path('login/',ApiLogin.as_view()),
     path('referral/<str:email>',ApiReferral.as_view()),
-   
-    
+    path('laris/',ApiFavourite.as_view()),
 ]
