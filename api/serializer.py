@@ -32,7 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
     image_collections = ProductImageSerializer(many=True)
     class Meta:
         model = product
-        fields = ('id','product_name','product_price','product_date','product_image','tenant_id',
+        fields = ('id','product_name','product_price','product_date','product_image','product_description','tenant_id',
         'tenant_name','image_collections','categories')
     def get_categories(self, product_instance):
         query_datas = product_category.objects.filter(product=product_instance)
