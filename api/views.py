@@ -33,10 +33,13 @@ class ApiAllProduct(generics.ListAPIView):
     serializer_class = ProductSerializer
     def get_queryset(self):
         queryset = product.objects.all()
-        self.serializer_class(queryset)
+        # self.serializer_class(queryset)
         pid = self.request.query_params.get('pid', None)
+        cid = self.request.query_params.get('cid',None)
         if pid is not None:
             queryset = queryset.filter(id=pid)
+        if cid is not None:
+            queryset = queryset.filter(categories=cid)
         return queryset 
 
 
