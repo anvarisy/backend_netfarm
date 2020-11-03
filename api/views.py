@@ -3,8 +3,8 @@ from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
 from api.serializer import CartSerializer, ClientSerializer, PostCartSerializer, PromoSerializer, UclientSerializer,\
-    FavouriteSerializer
-from api.models import order, promo, user, order_detail
+    FavouriteSerializer, BookmarkSerializer
+from api.models import bookmark, order, order_detail, promo, user
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -179,3 +179,12 @@ class ApiFavourite(generics.ListAPIView):
     # def get(self, request):
     #     data = order_detail.objects.all().values('product_id').annotate(t=Count('product_id')).order_by('t')
     #     return Response(data)
+
+class ApiBookmark(generics.ListAPIView):
+    serializer_class = BookmarkSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['user_id']
+    ordering_fields = ['bookmark_date']
+    def get_queryset(self):
+        queryset = bookmark.objects.all()
+        return queryset

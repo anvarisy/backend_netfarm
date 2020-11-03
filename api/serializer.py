@@ -1,6 +1,6 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
-from api.models import order, order_detail, product_category, product_images, promo, user
+from api.models import bookmark, order, order_detail, product_category, product_images, promo, user
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
@@ -46,7 +46,15 @@ class FavouriteSerializer(serializers.ModelSerializer):
     def get_product(self, product_instance):
         query = product.objects.filter(id=product_instance['product_id'])
         return[ProductSerializer(product).data for product in query]
-        
+
+class BookmarkSerializer(serializers.ModelSerializer):
+    product = serializers.SerializerMethodField()
+    class Meta:
+        model = bookmark
+        fields = ('id','user_id','bookmark_date','product')
+    def get_product(self, product_instance):
+        query = product.objects.filter(id=product_instance.product_id)
+        return[ProductSerializer(product).data for product in query]  
 
 class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -32,6 +32,8 @@ class product(models.Model):
     product_date = models.DateField(default=timezone.now)
     is_bpom = models.BooleanField(default=False)
     is_sibaweh = models.BooleanField(default=False)
+    point_demand = models.IntegerField(default=0)
+    point_favourite =  models.IntegerField(default=0)
     product_description = models.TextField(blank=True, null=True)
     def __str__(self):
         return self.product_name
@@ -41,7 +43,6 @@ class product_category(models.Model):
     category = models.ForeignKey(category, on_delete=models.CASCADE)
     def __str__(self):
         return self.product.product_name + " - " + self.category.category_name
-
 
 class product_images(models.Model):
     product = models.ForeignKey(product, on_delete=models.CASCADE,related_name='image_collections')
@@ -135,6 +136,13 @@ class user(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+class bookmark(models.Model):
+    user = models.ForeignKey(user, on_delete=models.CASCADE)
+    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    bookmark_date = models.DateField(default=timezone.now)
+    def __str__(self):
+        return self.product.product_name + " - " + self.user.email
 
 class order(models.Model):
     order_id = models.CharField(max_length=14, primary_key=True)
