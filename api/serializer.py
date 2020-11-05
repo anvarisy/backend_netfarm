@@ -56,6 +56,17 @@ class BookmarkSerializer(serializers.ModelSerializer):
         query = product.objects.filter(id=product_instance.product_id)
         return[ProductSerializer(product).data for product in query]  
 
+class ControllBookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = bookmark
+        fields = ('user_id','product_id')
+    def create(self, validated_data):
+        print(validated_data)
+        b = bookmark.objects.create(**validated_data)
+        return b
+    
+
+
 class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = product_check_halal

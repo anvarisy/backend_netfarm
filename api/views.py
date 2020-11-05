@@ -3,7 +3,7 @@ from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
 from api.serializer import CartSerializer, ClientSerializer, PostCartSerializer, PromoSerializer, UclientSerializer,\
-    FavouriteSerializer, BookmarkSerializer
+    FavouriteSerializer, BookmarkSerializer, ControllBookmarkSerializer
 from api.models import bookmark, order, order_detail, promo, user
 from rest_framework.response import Response
 from rest_framework import status
@@ -38,7 +38,7 @@ class ApiAllProduct(generics.ListAPIView):
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['$product_name']
-    ordering_fields = ['product_price','product_date']
+    ordering_fields = ['product_price','product_date','point_demand','point_favourite']
     def get_queryset(self):
         queryset = product.objects.all()
         # self.serializer_class(queryset)
@@ -86,6 +86,7 @@ class ApiCart(generics.ListAPIView):
             queryset = []
         return queryset
 
+
 class ApiRegister(APIView):
     def post (self, request):
         # print(request.data)
@@ -114,6 +115,7 @@ class ApiRegister(APIView):
         print(a)
         return Response(a,status=status.HTTP_201_CREATED)
 
+
 class ApiLogin(APIView):
     def post(self, request):
         print(request.data)
@@ -135,6 +137,7 @@ class ApiLogin(APIView):
         'expires_in': expires_in(token),
         'token': token.key
     }, status=status.HTTP_200_OK)
+
 
 class ApiReferral(generics.ListAPIView):
     serializer_class = ClientSerializer
@@ -159,12 +162,14 @@ class PostApiCart(APIView):
             return Response(body)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ApiPromo(generics.ListAPIView):
     # renderer_classes = [renderers.JSONRenderer]
     serializer_class = PromoSerializer
     def get_queryset(self):
         queryset = promo.objects.all()
         return queryset
+
 
 class ApiFavourite(generics.ListAPIView):
 # class ApiFavourite(APIView):
@@ -180,7 +185,10 @@ class ApiFavourite(generics.ListAPIView):
     #     data = order_detail.objects.all().values('product_id').annotate(t=Count('product_id')).order_by('t')
     #     return Response(data)
 
+
 class ApiBookmark(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = BookmarkSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['user_id']
@@ -188,3 +196,39 @@ class ApiBookmark(generics.ListAPIView):
     def get_queryset(self):
         queryset = bookmark.objects.all()
         return queryset
+
+
+class APiAddBookmark(APIView):
+    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer_class = ControllBookmarkSerializer(request.data)
+        # if not serializer_class.is_valid():
+        #     return Response(serializer_class.error_messages, status= status.HTTP_400_BAD_REQUEST)
+        # serializer_class.save()
+        p = product.objects.get(id=serializer_class.data['product_id'])
+        point = p.point_favourite
+        p.point_favourite = int(point) + 1
+        p.save()
+        return Response(serializer_class.data, status = status.HTTP_200_OK)
+
+
+class ApiDeleteBookmark(APIView):
+    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        # idb = self.request.query_params.get('idb', None)
+        idb = request.data['idb']
+        try:
+            b = bookmark.objects.get(id=idb)
+        except :
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        p = product.objects.get(id=b.product_id)
+        point = p.point_favourite
+        p.point_favourite = int(point) - 1
+        p.save()
+        if b is not None:
+            b.delete()
+
+            return Response({'status':'Delete Complete'},status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
