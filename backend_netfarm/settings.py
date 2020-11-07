@@ -170,3 +170,8 @@ REST_FRAMEWORK = {
     
 }
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
+SWAGGER_SETTINGS = {
+  
+    'VALIDATOR_URL': 'http://rest-netfarm.daf-q.id',
+   
+}
