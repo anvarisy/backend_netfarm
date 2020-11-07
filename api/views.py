@@ -3,7 +3,8 @@ from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
 from api.serializer import CartSerializer, ClientSerializer, PostCartSerializer, PromoSerializer, UclientSerializer,\
-    FavouriteSerializer, BookmarkSerializer, ControllBookmarkSerializer
+    FavouriteSerializer, BookmarkSerializer, ControllBookmarkSerializer,\
+    PostPayCod
 from api.models import bookmark, order, order_detail, promo, user
 from rest_framework.response import Response
 from rest_framework import status
@@ -232,3 +233,19 @@ class ApiDeleteBookmark(APIView):
 
             return Response({'status':'Delete Complete'},status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ApiPayCod(APIView):
+    # authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # def post(self, request):
+    #     serializer = PostPayCod(request.data)
+    #     order_ = order.objects.get(serializer.data['order_id'])
+    #     order_.status='Done'
+    #     order_.save()
+    #     # 1602681574127
+    #     det_order =
+    #        
+    def get(self, request):
+        order_details = order_detail.objects.get(oder_id='1602681574127')
+        return Response(order_details)

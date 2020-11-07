@@ -1,6 +1,6 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
-from api.models import bookmark, order, order_detail, product_category, product_images, promo, user
+from api.models import bookmark, order, order_detail, paycod, paycod_attachment, product_category, product_images, promo, user
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
@@ -139,3 +139,20 @@ class PromoSerializer(serializers.ModelSerializer):
         model = promo
         fields = ('date_start','date_end','tenant_id','name','image','url','position')
 
+class AttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = paycod_attachment
+        fields = ('paycod_id','attachment')
+
+class PostPayCod(serializers.ModelSerializer):
+    attachments = AttachmentSerializer
+    class Meta:
+        model = paycod
+        fields=('order_id','attachments')
+    
+    def create(self, validated_data):
+        atts = validated_data.pop('attachments')
+        p = paycod.objects.create(**validated_data)
+        for item in atts:
+            paycod_attachment.objects.create(paycod_id=p,**item)
+        return p

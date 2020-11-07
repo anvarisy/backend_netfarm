@@ -1,7 +1,6 @@
 from django.contrib import admin
 # from django import forms
-from api.models import category, order, order_detail, product, product_category, product_check_halal, product_images, promo, tenant, user,\
-    bookmark
+from api.models import bookmark, category, order, order_detail, paycod, paycod_attachment, product, product_category, product_check_halal, product_images, promo, tenant, user
 # from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 # from django.contrib.auth.forms import ReadOnlyPasswordHashField
 # from django.core.exceptions import ValidationError
@@ -79,4 +78,4 @@ from api.models import category, order, order_detail, product, product_category,
 #     filter_horizontal = ()
 admin.site.register([category,product,tenant,
 product_check_halal,user,order,order_detail,promo, 
-product_category,product_images, bookmark])
+product_category,product_images, bookmark, paycod,paycod_attachment])

@@ -167,4 +167,11 @@ class promo(models.Model):
     image = models.ImageField(upload_to='promo')
     url = models.CharField(max_length=160)
     position = models.IntegerField()
-    
+
+class paycod(models.Model):
+    order = models.ForeignKey(order,on_delete=models.CASCADE)
+    pay_date = models.DateField(default=timezone.now)
+
+class paycod_attachment(models.Model):
+    paycod = models.ForeignKey(paycod, on_delete=models.CASCADE, related_name='attachments')  
+    attachment = models.FileField(upload_to='cod_attachment')
