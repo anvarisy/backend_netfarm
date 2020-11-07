@@ -24,7 +24,8 @@ SECRET_KEY = 'e#unuau57y2zkypefcne(bshk-93bw0^2rke89(=j$l&w2n3vp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['localhost','127.0.0.1','rest-netfarm.daf-q.id']
 
 
