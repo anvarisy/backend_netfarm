@@ -142,8 +142,8 @@ STATIC_URL = '/root/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),)
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'root')
-STATIC_ROOT = '/home/dafqid/backend_netfarm/root'
+STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+# STATIC_ROOT = '/home/dafqid/backend_netfarm/root'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -170,8 +170,3 @@ REST_FRAMEWORK = {
     
 }
 TOKEN_EXPIRED_AFTER_SECONDS = 86400
-SWAGGER_SETTINGS = {
-  
-    'VALIDATOR_URL': 'http://rest-netfarm.daf-q.id',
-   
-}
