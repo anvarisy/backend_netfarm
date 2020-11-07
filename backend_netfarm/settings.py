@@ -23,11 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'e#unuau57y2zkypefcne(bshk-93bw0^2rke89(=j$l&w2n3vp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-ALLOWED_HOSTS = ['localhost','127.0.0.1','rest-netfarm.daf-q.id']
+DEBUG = True
 
+ALLOWED_HOSTS = ['192.168.43.93','127.0.0.1','rest-netfarm.daf-q.id']
 
 # Application definition
 
@@ -40,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
-    'drf_yasg',
+    # 'drf_yasg',
+     'rest_framework_swagger',
     'api',
 ]
 
@@ -165,6 +164,7 @@ REST_FRAMEWORK = {
     # ),
          'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
           'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+          'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
     #     'DEFAULT_RENDERER_CLASSES': (
     #     'rest_framework.renderers.JSONRenderer',
     # )

@@ -13,29 +13,34 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from backend_netfarm import settings
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-from rest_framework import permissions
-schema_view = get_schema_view(
-   openapi.Info(
-      title="Netfarm API",
-      default_version='v1',
-      description="Test description",
+# from drf_yasg.views import get_schema_view
+# from drf_yasg import openapi
+# from rest_framework import permissions
+# schema_view = get_schema_view(
+#    openapi.Info(
+#       title="Netfarm API",
+#       default_version='v1',
+#       description="Test description",
     
-   ),
-   public=True,
-#    permission_classes=[permissions.AllowAny],
-)
+#    ),
+#    public=True,
+# #    permission_classes=[permissions.AllowAny],
+# )
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Pastebin API')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
-    # path(r'swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0)),
-   path(r'swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
-   path(r'redoc/', schema_view.with_ui('redoc', cache_timeout=0)),
+    url(r'doc/', schema_view)
+#    path(r'swagger(?P<format>\.json|\.yaml)', schema_view.without_ui(cache_timeout=0)),
+#    path(r'swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
+#    path(r'redoc/', schema_view.with_ui('redoc', cache_timeout=0)),
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
