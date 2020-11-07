@@ -142,8 +142,8 @@ STATIC_URL = '/root/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),)
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'root')
-# STATIC_ROOT = '/home/dafqid/backend_netfarm/root'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'root')
+STATIC_ROOT = '/home/dafqid/backend_netfarm/root'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
