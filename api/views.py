@@ -236,16 +236,22 @@ class ApiDeleteBookmark(APIView):
 
 
 class ApiPayCod(APIView):
-    # authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
-    # permission_classes = [IsAuthenticated]
-    # def post(self, request):
-    #     serializer = PostPayCod(request.data)
-    #     order_ = order.objects.get(serializer.data['order_id'])
-    #     order_.status='Done'
-    #     order_.save()
-    #     # 1602681574127
-    #     det_order =
-    #        
-    def get(self, request):
-        order_details = order_detail.objects.get(oder_id='1602681574127')
-        return Response(order_details)
+    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = PostPayCod(request.data)
+        order_ = order.objects.get(serializer.data['order_id'])
+        order_.status='Done'
+        order_.save()
+        # 1602681574127
+        details =order_detail.objects.filter(order_id=serializer.data['order_id'])
+        for item in details:
+            p = product.objects.get(id=item['product_id'])
+            point = p.point_demand
+            p.point_demand = int(point)+1
+            p.save()
+        return Response(status=status.HTTP_200_OK)
+           
+    # def get(self, request):
+    #     order_details = order_detail.objects.filter(order_id='1602681574127')
+    #     return Response(json.dumps(order_details))
