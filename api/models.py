@@ -22,7 +22,6 @@ class tenant(models.Model):
     def __str__(self):
         return self.tenant_name
 
-
 class product(models.Model):
     tenant = models.ForeignKey(tenant, on_delete=models.CASCADE)
     categories = models.ManyToManyField(category, through='product_category')
@@ -36,7 +35,7 @@ class product(models.Model):
     point_favourite =  models.IntegerField(default=0)
     product_description = models.TextField(blank=True, null=True)
     def __str__(self):
-        return self.product_name
+        return "%s - %s " % (self.id, self.product_name) 
 
 class product_category(models.Model):
     product = models.ForeignKey(product, on_delete=models.CASCADE)
@@ -151,10 +150,16 @@ class order(models.Model):
     total = models.BigIntegerField()
     date_update = models.DateField()
     status = models.CharField(max_length=30)
-    
+
+class payment_status(models.Model):
+    order = models.ForeignKey(order, on_delete=models.CASCADE)
+    transaction_time = models.DateField(default=timezone.now)
+    transaction_status = models.CharField(max_length=30)
+    payment_type = models.CharField(max_length=120)
+
 class order_detail(models.Model):
     order = models.ForeignKey(order, related_name='details', on_delete=models.CASCADE)
-    product = models.ForeignKey(product, on_delete=models.CASCADE)
+    product = models.ForeignKey(product, related_name='product_order', on_delete=models.CASCADE)
     count_product = models.IntegerField()
     total = models.BigIntegerField()
     date_update = models.DateField()

@@ -65,8 +65,6 @@ class ControllBookmarkSerializer(serializers.ModelSerializer):
         b = bookmark.objects.create(**validated_data)
         return b
     
-
-
 class HalalSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = product_check_halal
@@ -133,7 +131,7 @@ class PostCartSerializer(serializers.HyperlinkedModelSerializer):
         for item in detail_order:
             order_detail.objects.create(order_id=self.data['order_id'],**item)
         return (o,detail_order)
-    
+      
 class PromoSerializer(serializers.ModelSerializer):
     class Meta:
         model = promo
@@ -156,3 +154,38 @@ class PostPayCod(serializers.ModelSerializer):
         for item in atts:
             paycod_attachment.objects.create(paycod_id=p,**item)
         return p
+
+class O_Detail(serializers.ModelSerializer):
+    product_id = serializers.PrimaryKeyRelatedField(queryset=product.objects.all().values_list('id', flat=True))
+    class Meta:
+        model = order_detail
+        fields = ('product_id','count_product','total','date_update')
+
+class CartSerializerII(serializers.ModelSerializer):
+    details = O_Detail(many=True)
+    class Meta:
+        model = order
+        fields = ('order_id','user_id','tenant_id','total','date_update','status','details')
+    
+    def update(self, instance, validated_data):
+        # print(validated_data)
+        data_detail = validated_data.pop('details')
+        print(data_detail)
+        details = (instance.details).all()
+        details =list(details)
+        # for item in details:
+        #     print(item.id)
+        # print(instance.order_id)
+        instance.user_id = validated_data.get('user_id', instance.user_id)
+        instance.tenant_id = validated_data.get('tenant_id', instance.tenant_id)
+        instance.total = validated_data.get('total', instance.total)
+        instance.date_update = validated_data.get('date_update', instance.date_update)
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        #Delete Item that not exist
+        for i in (instance.details).all():
+            i.delete()
+        #add new item
+        for item in data_detail:
+            order_detail.objects.create(order_id=instance.order_id,**item)
+        return instance

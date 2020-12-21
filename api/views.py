@@ -2,9 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
-from api.serializer import CartSerializer, ClientSerializer, PostCartSerializer, PromoSerializer, UclientSerializer,\
-    FavouriteSerializer, BookmarkSerializer, ControllBookmarkSerializer,\
-    PostPayCod
+from api.serializer import BookmarkSerializer, CartSerializer, CartSerializerII, ClientSerializer, ControllBookmarkSerializer, FavouriteSerializer, PostCartSerializer, PostPayCod, PromoSerializer, UclientSerializer
 from api.models import bookmark, order, order_detail, promo, user
 from rest_framework.response import Response
 from rest_framework import status
@@ -75,8 +73,8 @@ class ApiCheckHalal(generics.ListAPIView):
 
 
 class ApiCart(generics.ListAPIView):
-    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    # permission_classes = [IsAuthenticated]
     serializer_class = CartSerializer
     def get_queryset(self):
         queryset = order.objects.all()
@@ -150,8 +148,8 @@ class ApiReferral(generics.ListAPIView):
         
 
 class PostApiCart(APIView):
-    authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication, ExpiringTokenAuthentication]
+    # permission_classes = [IsAuthenticated]
     serializer_class = CartSerializer
     def post(self, request):
         body_unicode = request.data
@@ -255,3 +253,13 @@ class ApiPayCod(APIView):
     # def get(self, request):
     #     order_details = order_detail.objects.filter(order_id='1602681574127')
     #     return Response(json.dumps(order_details))
+
+class ApiTest(generics.ListAPIView):
+    serializer_class = CartSerializerII
+    queryset = order.objects.all()
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['order_id']
+    
+class ApiUpdate(generics.RetrieveUpdateDestroyAPIView):
+    queryset = order.objects.all()
+    serializer_class = CartSerializerII
