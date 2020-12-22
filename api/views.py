@@ -254,11 +254,13 @@ class ApiPayCod(APIView):
     #     order_details = order_detail.objects.filter(order_id='1602681574127')
     #     return Response(json.dumps(order_details))
 
-class ApiTest(generics.ListAPIView):
-    serializer_class = CartSerializerII
-    queryset = order.objects.all()
+class ApiTest(generics.ListCreateAPIView):
+    serializer_class = CartSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['order_id']
+    search_fields = ['user__email']
+    def get_queryset(self):
+        queryset = order.objects.all()
+        return queryset
     
 class ApiUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = order.objects.all()
