@@ -1,6 +1,6 @@
 from .models import tenant, product, category, product_check_halal
 from rest_framework import serializers
-from api.models import bookmark, order, order_detail, paycod, paycod_attachment, product_category, product_images, promo, user
+from api.models import bookmark, order, order_detail, paycod, paycod_attachment, payment_status, product_category, product_images, promo, user
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
     image_collections = ProductImageSerializer(many=True)
     class Meta:
         model = product
-        fields = ('id','product_name','product_price','product_date','product_image','product_description','tenant_id',
+        fields = ('id','product_name','product_price','product_weight','product_date','product_image','product_description','tenant_id',
         'tenant_name','image_collections','categories')
     def get_categories(self, product_instance):
         query_datas = product_category.objects.filter(product=product_instance)
@@ -89,9 +89,10 @@ class ClientSerializer(serializers.ModelSerializer):
 class OrderDetail(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.product_name')
     product_image = serializers.CharField(source='product.product_image')
+    product_weight = serializers.CharField(source='product.product_weight')
     class Meta:
         model = order_detail
-        fields = ('product_id','product_name','product_image','count_product','total','date_update')
+        fields = ('product_id','product_name','product_image', 'product_weight','count_product','total','date_update')
         
 class CartSerializer(serializers.ModelSerializer):
     details = OrderDetail(many=True)
@@ -189,3 +190,19 @@ class CartSerializerII(serializers.ModelSerializer):
         for item in data_detail:
             order_detail.objects.create(order_id=instance.order_id,**item)
         return instance
+
+
+class OrderForStatus(serializers.ModelSerializer):
+    class Meta:
+        model = order
+        fields = ('order_id',)
+
+class PostPaymentStatus(serializers.ModelSerializer):
+    order_id = OrderForStatus()
+    class Meta:
+        model = payment_status
+        fields = ('order_id','transaction_time','transaction_status','payment_type')
+    def create (self, validated_data):
+        print(validated_data)
+        status = payment_status.objects.update_or_create(**validated_data)
+        return status

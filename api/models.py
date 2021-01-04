@@ -27,6 +27,7 @@ class product(models.Model):
     categories = models.ManyToManyField(category, through='product_category')
     product_name = models.CharField(max_length=160)
     product_price = models.IntegerField()
+    product_weight = models.IntegerField(default=1)
     product_image = models.ImageField(upload_to='product')
     product_date = models.DateField(default=timezone.now)
     is_bpom = models.BooleanField(default=False)
@@ -152,7 +153,7 @@ class order(models.Model):
     status = models.CharField(max_length=30)
 
 class payment_status(models.Model):
-    order = models.ForeignKey(order, on_delete=models.CASCADE)
+    order = models.ForeignKey(order,related_name='ostatus', on_delete=models.CASCADE)
     transaction_time = models.DateField(default=timezone.now)
     transaction_status = models.CharField(max_length=30)
     payment_type = models.CharField(max_length=120)

@@ -1,9 +1,10 @@
 from django.shortcuts import render
+from django.views import View
 from rest_framework import generics, renderers
 from .models import category, tenant, product, product_check_halal
 from .serializer import CategorySerializer, TenantSerializer, ProductSerializer, HalalSerializer
-from api.serializer import BookmarkSerializer, CartSerializer, CartSerializerII, ClientSerializer, ControllBookmarkSerializer, FavouriteSerializer, PostCartSerializer, PostPayCod, PromoSerializer, UclientSerializer
-from api.models import bookmark, order, order_detail, promo, user
+from api.serializer import BookmarkSerializer, CartSerializer, CartSerializerII, ClientSerializer, ControllBookmarkSerializer, FavouriteSerializer, PostCartSerializer, PostPayCod, PostPaymentStatus, PromoSerializer, UclientSerializer
+from api.models import bookmark, order, order_detail, payment_status, promo, user
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -19,7 +20,9 @@ from api.authentication import ExpiringTokenAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.db.models import Count
-
+from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 class ApiAllCategory(generics.ListAPIView):
     renderer_classes = [renderers.JSONRenderer]
@@ -265,3 +268,33 @@ class ApiTest(generics.ListCreateAPIView):
 class ApiUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = order.objects.all()
     serializer_class = CartSerializerII
+
+@method_decorator(csrf_exempt, name='dispatch')
+class NotificationPayment(View):
+    def post(self, request):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        transaction_status = body['transaction_status']
+        order_id = body['order_id']
+        transaction_time = body['transaction_time']
+        payment_type = body['payment_type']
+        data = {
+                    "order_id":order_id,
+                    "transaction_time": transaction_time,
+                    "transaction_status": transaction_status,
+                    "payment_type": payment_type
+            }
+        if(body['transaction_status']=='settlement'):
+           order = order.objects.get(order_id=order_id)
+           order.status="Payed"
+           order.save()
+        payment_status.objects.create(**data)
+        return HttpResponse('OK')
+
+class ApiPostPayment(generics.ListCreateAPIView):
+    serializer_class = PostPaymentStatus
+    # queryset = payment_status.objects.all()
+    def post(self, request):
+        serializer = PostPaymentStatus(data=request.data)
+        payment_status.objects.create(**request.data)
+        return Response(status = status.HTTP_200_OK)
