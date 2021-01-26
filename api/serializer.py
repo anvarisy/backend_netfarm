@@ -6,7 +6,7 @@ UserModel = get_user_model()
 class TenantSerializer(serializers.ModelSerializer):
     class Meta:
         model = tenant
-        fields = ('id','tenant_name','tenant_address','tenant_image','tenant_owner')
+        fields = ('id','tenant_name','tenant_city_code','tenant_address','tenant_image','tenant_owner')
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

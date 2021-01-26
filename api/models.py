@@ -17,6 +17,7 @@ class tenant(models.Model):
     # tenant_id =  models.CharField(max_length=6, primary_key=True)
     tenant_name = models.CharField(max_length=70)
     tenant_address = models.TextField()
+    tenant_city_code = models.IntegerField(default=0)
     tenant_owner = models.CharField(max_length=100)
     tenant_image = models.ImageField(upload_to='tenant')
     def __str__(self):
