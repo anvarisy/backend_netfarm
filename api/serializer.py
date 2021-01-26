@@ -97,9 +97,10 @@ class OrderDetail(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     details = OrderDetail(many=True)
     tenant_name = serializers.CharField(source='tenant.tenant_name')
+    tenant_city_code = serializers.CharField(source='tenant.tenant_city_code')
     class Meta:
         model = order
-        fields = ('order_id','user_id','tenant_id','tenant_name','total','date_update','status','details')
+        fields = ('order_id','user_id','tenant_city_code','tenant_id','tenant_name','total','date_update','status','details')
     
     def create(self, validated_data):
         detail_order = validated_data.pop('details')
