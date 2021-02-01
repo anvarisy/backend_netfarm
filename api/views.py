@@ -284,11 +284,20 @@ class NotificationPayment(View):
                     "transaction_status": transaction_status,
                     "payment_type": payment_type
             }
-        if(body['transaction_status']=='settlement'):
-           order = order.objects.get(order_id=order_id)
-           order.status="Payed"
-           order.save()
-        payment_status.objects.create(**data)
+        if transaction_status=='settlement':
+            order = order.objects.get(order_id=order_id)
+            order.status="Payed"
+            order.save()
+        elif transaction_status=='pending':
+            order = order.objects.get(order_id=order_id)
+            order.status="Pending"
+            order.save()
+        else :
+            order = order.objects.get(order_id=order_id)
+            order.status="Failed"
+            order.save()
+        pay = payment_status.objects.create(**data)
+        pay.save()
         return HttpResponse('OK')
 
 class ApiPostPayment(generics.ListCreateAPIView):
