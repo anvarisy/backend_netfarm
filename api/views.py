@@ -285,17 +285,17 @@ class NotificationPayment(View):
                     "payment_type": payment_type
             }
         if transaction_status=='settlement':
-            order = order.objects.get(order_id=order_id)
-            order.status="Payed"
-            order.save()
+            orde = order.objects.get(order_id=order_id)
+            orde.status="Payed"
+            orde.save()
         elif transaction_status=='pending':
-            order = order.objects.get(order_id=order_id)
-            order.status="Pending"
-            order.save()
+            orde = order.objects.get(order_id=order_id)
+            orde.status="Pending"
+            orde.save()
         else :
-            order = order.objects.get(order_id=order_id)
-            order.status="Failed"
-            order.save()
+            orde = order.objects.get(order_id=order_id)
+            orde.status="Failed"
+            orde.save()
         pay = payment_status.objects.create(**data)
         pay.save()
         return HttpResponse('OK')
