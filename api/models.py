@@ -155,7 +155,7 @@ class order(models.Model):
 
 class payment_status(models.Model):
     order = models.ForeignKey(order,related_name='ostatus', on_delete=models.CASCADE)
-    transaction_time = models.DateField(default=timezone.now)
+    transaction_time = models.DateTimeField(default=timezone.now)
     transaction_status = models.CharField(max_length=30)
     payment_type = models.CharField(max_length=120)
 
