@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'backend_netfarm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dafqid_ndb',
-        'USER': 'dafqid_ndb',
-        'PASSWORD': 'KoalaPanda123',
-        'HOST': 'cerberus.jagoanhosting.com',
+        'NAME': 'khwarizm_netfarm',
+        'USER': 'khwarizm_netfarm',
+        'PASSWORD': 'khwarizm_netfarm',
+        'HOST': 'weaver.jagoanhosting.com',
         # 'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {

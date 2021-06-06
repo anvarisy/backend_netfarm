@@ -102,7 +102,7 @@ class user(AbstractBaseUser):
     objects = UserManager()
     date_joined = models.DateField(default=timezone.now)
     referal = models.ForeignKey('self',null=True, blank=True, related_name='referral',on_delete=models.CASCADE)
-    level = models.IntegerField()
+    level = models.IntegerField(default=1)
     
     # EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'

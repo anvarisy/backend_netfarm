@@ -3,3 +3,4 @@ Pillow
 djangorestframework
 djangorestframework-jsonapi
 django-filter
+django-rest-swagger
