@@ -25,7 +25,7 @@ SECRET_KEY = 'e#unuau57y2zkypefcne(bshk-93bw0^2rke89(=j$l&w2n3vp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.93','127.0.0.1','rest-netfarm.daf-q.id']
+ALLOWED_HOSTS = ['192.168.43.93','127.0.0.1','rest-netfarm.khwarizmi.co.id']
 
 # Application definition
 
