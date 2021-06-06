@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models  import BaseUserManager, AbstractBaseUser
 from django.utils import timezone
-from unittest.util import _MAX_LENGTH
-from pyasn1.compat.octets import null
+
 
 # Create your models here.
 class category(models.Model):
